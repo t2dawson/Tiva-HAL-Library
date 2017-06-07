@@ -413,6 +413,11 @@
               <FileType>5</FileType>
               <FilePath>.\hal_gpio_driver.h</FilePath>
             </File>
+            <File>
+              <FileName>hal_gpio_driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\hal_gpio_driver.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

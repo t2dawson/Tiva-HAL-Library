@@ -21,6 +21,7 @@
 #define GPIO_PIN_PULL_DOWN		((uint32_t)0x01)
 #define GPIO_PIN_OPEN_DRAIN		((uint32_t)0x00)
 #define GPIO_PIN_PULL_UP			((uint32_t)0x01)
+#define GPIO_PIN_NO_PULL			((uint32_t)0x02)
 
 
 //GPIO Digital settings:
@@ -89,18 +90,28 @@ typedef struct {
 	
 	uint32_t  direction;	// determines whether pin is input or output
 		
-	uint32_t  pull_up;  	// determines whether pull-up or pull down resistor in attached or not
+	uint32_t  pull_up;  	// determines whether pull-up or pull down resistor in attached or not. A value of 1 refers to pull-up/
+												// and a value of 0 refer to pull-down;
 	
 	uint32_t open_drain;	// determines if the pin is in open drain configuration or not
 	
 	uint32_t alternate_function;	//determines the alternate function of the gpio pin if function is set to alternate function.
 	
-	uint32_t digital;				// determines whether the pin is digital or analog
+	uint32_t digital_enable;				// determines whether the pin digital function is enabled or disable;
+	
+	uint32_t analog_enable;					// determines whether the pin analog function is enabled or disable;
 	
 	uint32_t drive_strength; // determines the drive strength (2ma,4ma or 8ma) of the gpio pin
 	
 }	GPIO_Config_t ;
 
+
+typedef enum {
+	
+	RISING_EDGE,
+	FALLING_EDGE,
+	RISING_AND_FALLING_EDGE
+} edge_select_t;
 
 
 /**********************************************************
@@ -135,5 +146,19 @@ uint8_t hal_gpio_read(GPIOA_Type* GPIOx, uint16_t pin);
 */
 void hal_gpio_write(GPIOA_Type* GPIOx, uint16_t pin, uint8_t val);
 
+/**
+*
+*	@description: Configures external interrupt on selected gpio pin
+*	@param: uint16_t: the GPIO pin number to configure
+*	@param: edge_select_t: the interrupt edge trigger to be used (Rising Edge, Falling Edge, Both Rising and Falling Edges)
+*/
+void hal_configure_gpio_interrupt(uint16_t pin, edge_select_t edge);
+
+/**
+*
+*	@description: Enables the interrupt for the selected GPIO pin. The interrupt must be configured first using /
+*								the hal_configure_gpio_interrupt() function.
+*
+*/
 
 #endif //__HAL_GPIO_DRIVER_H
