@@ -72,8 +72,8 @@
 #define __HAL_RCC_GPIOD_CLK_ENABLE()		(SYSCTL->RCGCGPIO|= (0 << 3))
 #define __HAL_RCC_GPIOE_CLK_DISABLE()		(SYSCTL->RCGCGPIO|= (1 << 4))
 #define __HAL_RCC_GPIOE_CLK_ENABLE()		(SYSCTL->RCGCGPIO|= (0 << 4))
-#define __HAL_RCC_GPIOF_CLK_DISABLE()		(SYSCTL->RCGCGPIO|= (1 << 5))
-#define __HAL_RCC_GPIOF_CLK_ENABLE()		(SYSCTL->RCGCGPIO|= (0 << 5))
+#define __HAL_RCC_GPIOF_CLK_ENABLE()		(SYSCTL->RCGCGPIO|= (1 << 5))
+#define __HAL_RCC_GPIOF_CLK_DISABLE()		(SYSCTL->RCGCGPIO|= (0 << 5))
 
 
 /***********************************************
@@ -110,7 +110,9 @@ typedef enum {
 	
 	RISING_EDGE,
 	FALLING_EDGE,
-	RISING_AND_FALLING_EDGE
+	RISING_AND_FALLING_EDGE,
+	NO_EDGE_LOW_LEVEL,
+	NO_EDGE_HIGH_LEVEL
 } edge_select_t;
 
 
@@ -134,7 +136,7 @@ void hal_gpio_init(GPIOA_Type* GPIOx, GPIO_Config_t* gpio_pin_conf);
 * @param: uint16_t: the GPIO pin number to read from
 *	@retval: uint8_t: value read from pin
 */
-uint8_t hal_gpio_read(GPIOA_Type* GPIOx, uint16_t pin);
+uint8_t hal_gpio_read(GPIOA_Type* GPIOx, uint8_t pin);
 
 
 /**
@@ -144,21 +146,31 @@ uint8_t hal_gpio_read(GPIOA_Type* GPIOx, uint16_t pin);
 * @param: uint8_t: the value to write to the GPIO pin
 *	@retval: none
 */
-void hal_gpio_write(GPIOA_Type* GPIOx, uint16_t pin, uint8_t val);
+void hal_gpio_write(GPIOA_Type* GPIOx, uint8_t pin, uint8_t val);
 
 /**
 *
 *	@description: Configures external interrupt on selected gpio pin
 *	@param: uint16_t: the GPIO pin number to configure
 *	@param: edge_select_t: the interrupt edge trigger to be used (Rising Edge, Falling Edge, Both Rising and Falling Edges)
+*	@param: GPIOA_Type* GPIOx: Pointer to a GPIOA_Type struct containing register addresses 
 */
-void hal_configure_gpio_interrupt(uint16_t pin, edge_select_t edge);
+void hal_configure_gpio_interrupt(GPIOA_Type* GPIOx, uint8_t pin, edge_select_t edge);
 
 /**
 *
 *	@description: Enables the interrupt for the selected GPIO pin. The interrupt must be configured first using /
 *								the hal_configure_gpio_interrupt() function.
 *
+*	@param: GPIOA_Type* GPIOx: Pointer to a GPIOA_Type struct containing register addresses
+*	@param: uint8_t pin: the GPIO pin number to enable interrupts for
 */
 
+void hal_enable_gpio_interrupt(GPIOA_Type* GPIOx, uint8_t pin, IRQn_Type irq);
+
+
+void hal_disable_gpio_interrupt(GPIOA_Type* GPIOx, uint8_t pin, IRQn_Type irq);
+
+
+void hal_clear_gpio_interrupt(GPIOA_Type* GPIOx, uint8_t pin);
 #endif //__HAL_GPIO_DRIVER_H

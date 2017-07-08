@@ -31,7 +31,7 @@ void hal_gpio_init(GPIOA_Type* GPIOx, GPIO_Config_t* gpio_pin_conf) {
 			GPIOx->AMSEL |= (gpio_pin_conf->analog_enable << gpio_pin_conf->pin);			
 }
 
-void hal_gpio_write(GPIOA_Type* GPIOx, uint16_t pin, uint8_t val) {
+void hal_gpio_write(GPIOA_Type* GPIOx, uint8_t pin, uint8_t val) {
 	
 	if(val)
 		GPIOx->DATA |= ( 1 << pin);
@@ -40,7 +40,7 @@ void hal_gpio_write(GPIOA_Type* GPIOx, uint16_t pin, uint8_t val) {
 		GPIOx->DATA &= ~(1 << pin);
 }
 
-uint8_t hal_gpio_read(GPIOA_Type* GPIOx, uint16_t pin) {
+uint8_t hal_gpio_read(GPIOA_Type* GPIOx, uint8_t pin) {
 	
 	uint8_t value;
 	
@@ -53,3 +53,55 @@ uint8_t hal_gpio_read(GPIOA_Type* GPIOx, uint16_t pin) {
 	
 }
 
+void hal_configure_gpio_interrupt(GPIOA_Type* GPIOx, uint8_t pin, edge_select_t edge) {
+	
+	if(edge == NO_EDGE_LOW_LEVEL) { 
+		GPIOx->IS |= (1 << pin);
+		GPIOx->IEV |= ( 0 << pin);
+	}
+	
+	else if ( edge == NO_EDGE_HIGH_LEVEL) {
+			
+			GPIOx->IS |= ( 1 << pin);
+			GPIOx->IEV |= ( 1 << pin);
+	}
+	
+	else {
+		
+		GPIOx->IS |= (0 << pin);
+		
+		if ( edge == RISING_AND_FALLING_EDGE) 
+			GPIOx->IBE |= (1 << pin);
+		
+		else if (edge == FALLING_EDGE) {
+			
+			GPIOx->IBE |= (0 << pin);
+			GPIOx->IEV |= (0 << pin);
+		}
+		
+		else {
+			
+			GPIOx->IBE |= ( 0 << pin);
+			GPIOx->IEV |= (1 << pin);
+		}	
+	}
+	
+}
+
+void hal_enable_gpio_interrupt(GPIOA_Type* GPIOx, uint8_t pin, IRQn_Type irq) {
+	
+	GPIOx->IM |= ( 1 << pin);
+	__NVIC_EnableIRQ(irq);
+}
+
+void hal_disable_gpio_interrupt(GPIOA_Type* GPIOx, uint8_t pin, IRQn_Type irq) {
+	
+	GPIOx->IM |= ( 0 << pin);
+	__NVIC_DisableIRQ(irq);
+}
+
+void hal_clear_gpio_interrupt(GPIOA_Type* GPIOx, uint8_t pin) {
+	
+	
+	
+}
