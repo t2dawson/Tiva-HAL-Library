@@ -63,17 +63,17 @@
 
 **********************************************/
 #define __HAL_RCC_GPIOA_CLK_ENABLE()		(SYSCTL->RCGCGPIO|= (1 << 0))
-#define __HAL_RCC_GPIOA_CLK_DISABLE()		(SYSCTL->RCGCGPIO|= (0 << 0))
+#define __HAL_RCC_GPIOA_CLK_DISABLE()		(SYSCTL->RCGCGPIO&= ~(1 << 0))
 #define __HAL_RCC_GPIOB_CLK_ENABLE()		(SYSCTL->RCGCGPIO|= (1 << 1))
-#define __HAL_RCC_GPIOB_CLK_DISABLE()		(SYSCTL->RCGCGPIO|= (0 << 1))
-#define __HAL_RCC_GPIOC_CLK_DISABLE()		(SYSCTL->RCGCGPIO|= (1 << 2))
-#define __HAL_RCC_GPIOC_CLK_ENABLE()		(SYSCTL->RCGCGPIO|= (0 << 2))
-#define __HAL_RCC_GPIOD_CLK_DISABLE()		(SYSCTL->RCGCGPIO|= (1 << 3))
-#define __HAL_RCC_GPIOD_CLK_ENABLE()		(SYSCTL->RCGCGPIO|= (0 << 3))
-#define __HAL_RCC_GPIOE_CLK_DISABLE()		(SYSCTL->RCGCGPIO|= (1 << 4))
-#define __HAL_RCC_GPIOE_CLK_ENABLE()		(SYSCTL->RCGCGPIO|= (0 << 4))
+#define __HAL_RCC_GPIOB_CLK_DISABLE()		(SYSCTL->RCGCGPIO&= ~(1 << 1))
+#define __HAL_RCC_GPIOC_CLK_ENABLE()		(SYSCTL->RCGCGPIO|= (1 << 2))
+#define __HAL_RCC_GPIOC_CLK_DISABLE()		(SYSCTL->RCGCGPIO&= ~(1 << 2))
+#define __HAL_RCC_GPIOD_CLK_ENABLE()		(SYSCTL->RCGCGPIO|= (1 << 3))
+#define __HAL_RCC_GPIOD_CLK_DISABLE()		(SYSCTL->RCGCGPIO&= ~(1 << 3))
+#define __HAL_RCC_GPIOE_CLK_ENABLE()		(SYSCTL->RCGCGPIO|= (1 << 4))
+#define __HAL_RCC_GPIOE_CLK_DISABLE()		(SYSCTL->RCGCGPIO&= ~(1 << 4))
 #define __HAL_RCC_GPIOF_CLK_ENABLE()		(SYSCTL->RCGCGPIO|= (1 << 5))
-#define __HAL_RCC_GPIOF_CLK_DISABLE()		(SYSCTL->RCGCGPIO|= (0 << 5))
+#define __HAL_RCC_GPIOF_CLK_DISABLE()		(SYSCTL->RCGCGPIO&= ~(1 << 5))
 
 
 /***********************************************

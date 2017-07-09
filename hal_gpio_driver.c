@@ -57,7 +57,7 @@ void hal_configure_gpio_interrupt(GPIOA_Type* GPIOx, uint8_t pin, edge_select_t 
 	
 	if(edge == NO_EDGE_LOW_LEVEL) { 
 		GPIOx->IS |= (1 << pin);
-		GPIOx->IEV |= ( 0 << pin);
+		GPIOx->IEV &= ~( 1 << pin);
 	}
 	
 	else if ( edge == NO_EDGE_HIGH_LEVEL) {
@@ -68,20 +68,20 @@ void hal_configure_gpio_interrupt(GPIOA_Type* GPIOx, uint8_t pin, edge_select_t 
 	
 	else {
 		
-		GPIOx->IS |= (0 << pin);
+		GPIOx->IS &= ~1 << pin);
 		
 		if ( edge == RISING_AND_FALLING_EDGE) 
 			GPIOx->IBE |= (1 << pin);
 		
 		else if (edge == FALLING_EDGE) {
 			
-			GPIOx->IBE |= (0 << pin);
-			GPIOx->IEV |= (0 << pin);
+			GPIOx->IBE &= ~(1 << pin);
+			GPIOx->IEV &= (1 << pin);
 		}
 		
 		else {
 			
-			GPIOx->IBE |= ( 0 << pin);
+			GPIOx->IBE &= ~( 1 << pin);
 			GPIOx->IEV |= (1 << pin);
 		}	
 	}
@@ -96,7 +96,7 @@ void hal_enable_gpio_interrupt(GPIOA_Type* GPIOx, uint8_t pin, IRQn_Type irq) {
 
 void hal_disable_gpio_interrupt(GPIOA_Type* GPIOx, uint8_t pin, IRQn_Type irq) {
 	
-	GPIOx->IM |= ( 0 << pin);
+	GPIOx->IM &= ~( 1 << pin);
 	__NVIC_DisableIRQ(irq);
 }
 

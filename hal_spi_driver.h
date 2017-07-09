@@ -20,26 +20,30 @@
 #define SPI_CLK_POL_LOW								0
 #define SPI_CLK_POL_HIGH							1
 
-#define SPI_SPI_FORMAT
-#define SPI_DATA_SIZE_4_BIT
-#define SPI_DATA_SIZE_5_BIT
-#define SPI_DATA_SIZE_6_BIT
-#define SPI_DATA_SIZE_7_BIT
-#define SPI_DATA_SIZE_8_BIT
-#define SPI_DATA_SIZE_9_BIT
-#define SPI_DATA_SIZE_10_BIT
-#define SPI_DATA_SIZE_11_BIT
-#define SPI_DATA_SIZE_12_BIT
-#define SPI_DATA_SIZE_13_BIT
-#define SPI_DATA_SIZE_14_BIT
-#define SPI_DATA_SIZE_15_BIT
-#define SPI_DATA_SIZE_16_BIT
+#define SSI_FORMAT_SPI								0x00
+#define SSI_FORMAT_TI_SSI							0x01
+#define SSI_FORMAT_MICROWIRE					0x02
+
+#define SPI_RESET_DATA_SIZE_REG				0xfffffff0
+#define SPI_DATA_SIZE_4_BIT						((uint32_t) 0x03)
+#define SPI_DATA_SIZE_5_BIT						((uint32_t) 0x04)
+#define SPI_DATA_SIZE_6_BIT						((uint32_t) 0x05)
+#define SPI_DATA_SIZE_7_BIT						((uint32_t) 0x06)
+#define SPI_DATA_SIZE_8_BIT						((uint32_t) 0x07)
+#define SPI_DATA_SIZE_9_BIT						((uint32_t) 0x08)
+#define SPI_DATA_SIZE_10_BIT					((uint32_t) 0x09)
+#define SPI_DATA_SIZE_11_BIT					((uint32_t) 0x0A)
+#define SPI_DATA_SIZE_12_BIT					((uint32_t) 0x0B)
+#define SPI_DATA_SIZE_13_BIT					((uint32_t) 0x0C)
+#define SPI_DATA_SIZE_14_BIT					((uint32_t) 0x0D)
+#define SPI_DATA_SIZE_15_BIT					((uint32_t) 0x0E)
+#define SPI_DATA_SIZE_16_BIT					((uint32_t) 0x0F)
 
 
 /********************** Bit definitions for SPI_CR1 register*************/
 #define SPI_REG_CR1_MASTER_SLAVE_SELECT 	((uint32_t) 1 << 2)
 #define SPI_MASTER_MODE					0
-#define SPI_SLAVE_MODE					1
+#define SPI_SLAVE_MODE					1					
 
 #define SPI_REG_CR1_SSI_ENABLE						((uint32_t) 1 << 1)
 #define SPI_SSI_ENABLE					1
@@ -57,6 +61,9 @@
 #define SPI_REG_SR_TX_FIFO_EMPTY				((uint32_t) 1 << 0 ) 
 
 
+/********************** Macro definitions for SPI_CC register*************/
+#define SPI_CLK_SOURCE_SYSTEM_CLK			((uint32_t) 0x00)
+#define SPI_CLK_SOURCE_PIOSC					((uint32_t) 0x05)
 
 /**********************Helper Macros and Clock Enable macro functions**********/
 #define RESET 0
@@ -72,10 +79,10 @@
 #define __HAL_RCC_SPI2_CLK_ENABLE				(SYSCTL->RCGCSSI |= ( 1 << 2))
 #define __HAL_RCC_SPI3_CLK_ENABLE				(SYSCTL->RCGCSSI |= ( 1 << 3))
 
-#define __HAL_RCC_SPI0_CLK_DISABLE			(SYSCTL->RCGCSSI |= ( 0 << 0))
-#define __HAL_RCC_SPI1_CLK_DISABLE			(SYSCTL->RCGCSSI |= ( 0 << 1))
-#define __HAL_RCC_SPI2_CLK_DISABLE			(SYSCTL->RCGCSSI |= ( 0 << 2))
-#define __HAL_RCC_SPI3_CLK_DISABLE			(SYSCTL->RCGCSSI |= ( 0 << 3))
+#define __HAL_RCC_SPI0_CLK_DISABLE			(SYSCTL->RCGCSSI &= ~( 1 << 0))
+#define __HAL_RCC_SPI1_CLK_DISABLE			(SYSCTL->RCGCSSI &= ~( 1 << 1))
+#define __HAL_RCC_SPI2_CLK_DISABLE			(SYSCTL->RCGCSSI &= ~( 1 << 2))
+#define __HAL_RCC_SPI3_CLK_DISABLE			(SYSCTL->RCGCSSI &= ~( 1 << 3))
 
 /****************************************************************************************/
 /*											2. Serial Peripheral Interface																	*/
@@ -108,12 +115,19 @@ typedef struct {
 	
 	uint32_t dataSize;  // Specifies SPI Data Size
 	
+	uint32_t clkSource;
+	
 	uint32_t clkPolarity;  // Specifices the clock's steady state
 	
 	uint32_t clcPhase; // Specifies the clock's active edge for bit capture
 	
-	uint32_t baudRatePrescalar; // Specifies the Baud Rate prescalar value used to configure TX and RX clock
+	uint8_t clockPrescaleDiv; 	// the prescale divider value used to derive the SSI_In clock. This value must be an even integer /
+															// between 2 and 254.
 
+	uint8_t serialClkRate;  	// the clock is further divided by (1 + serialClkRate)
+	
+	uint8_t loopback; // Specifies whether the Tx to Rx buffer loopback is enabled or not
+	
 } spi_init_t;
 
 
