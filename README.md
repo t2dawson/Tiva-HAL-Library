@@ -1,1 +1,1 @@
-A hardware abstraction layer for the Tiva TM4C123GH6PM micrcontroller
+A hardware abstraction layer library for the Texas Instrument TM4C123GH6PM microcontroller
