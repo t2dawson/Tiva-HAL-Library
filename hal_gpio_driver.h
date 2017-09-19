@@ -1,6 +1,11 @@
 #ifndef __HAL_GPIO_DRIVER_H
 #define __HAL_GPIO_DRIVER_H
 
+//TODO: develop api for indiviual pin read and write
+//TODO: define macros for alternate functions
+//TODO: develop helper function to set alternate funciton
+//TODO: define macros for GPIO port IRQ numbers
+
 //Include the MCU specific header file 
 #include "tm4c123gh6pm.h"
 
@@ -131,22 +136,20 @@ void hal_gpio_init(GPIOA_Type* GPIOx, GPIO_Config_t* gpio_pin_conf);
 
 
 /**
-*	@description: Initializes the gpio pin(s)
+*	@description: Reads the value of the GPIO port
 *	@param: *GPIOx: GPIO Port Address 
-* @param: uint16_t: the GPIO pin number to read from
-*	@retval: uint8_t: value read from pin
+*	@retval: uint16_t: value read from the GPIO port
 */
-uint8_t hal_gpio_read(GPIOA_Type* GPIOx, uint8_t pin);
+uint8_t hal_gpio_read_port(GPIOA_Type* GPIOx);
 
 
 /**
-*	@description: Initializes the gpio pin(s)
+*	@description: Writes a value to the GPIO port
 *	@param: *GPIOx: GPIO Port Address 
-*	@param: uint16_t: the GPIO pin number to write to
-* @param: uint8_t: the value to write to the GPIO pin
+* @param: uint8_t: the value to write to the GPIO port
 *	@retval: none
 */
-void hal_gpio_write(GPIOA_Type* GPIOx, uint8_t pin, uint8_t val);
+void hal_gpio_write_port(GPIOA_Type* GPIOx, uint8_t val);
 
 /**
 *
@@ -154,6 +157,7 @@ void hal_gpio_write(GPIOA_Type* GPIOx, uint8_t pin, uint8_t val);
 *	@param: uint16_t: the GPIO pin number to configure
 *	@param: edge_select_t: the interrupt edge trigger to be used (Rising Edge, Falling Edge, Both Rising and Falling Edges)
 *	@param: GPIOA_Type* GPIOx: Pointer to a GPIOA_Type struct containing register addresses 
+*	@retval: none
 */
 void hal_configure_gpio_interrupt(GPIOA_Type* GPIOx, uint8_t pin, edge_select_t edge);
 
@@ -164,13 +168,29 @@ void hal_configure_gpio_interrupt(GPIOA_Type* GPIOx, uint8_t pin, edge_select_t 
 *
 *	@param: GPIOA_Type* GPIOx: Pointer to a GPIOA_Type struct containing register addresses
 *	@param: uint8_t pin: the GPIO pin number to enable interrupts for
+*	@param: irq: the irq number of the GPIO peripheral
+*	@retval: none
 */
-
 void hal_enable_gpio_interrupt(GPIOA_Type* GPIOx, uint8_t pin, IRQn_Type irq);
 
-
+/**
+*
+*	@description: disables the interrupt for the selected GPIO pin. 
+*	@param: GPIOA_Type* GPIOx: Pointer to a GPIOA_Type struct containing register addresses
+*	@param: uint8_t pin: the GPIO pin number to enable interrupts for
+*	@param: irq: the irq number of the GPIO peripheral
+*	@retval: none
+*/
 void hal_disable_gpio_interrupt(GPIOA_Type* GPIOx, uint8_t pin, IRQn_Type irq);
 
 
+/**
+*	@description: clears the GPIO interrupt
+*	@param *GPIOx: pointer to GPIO peripheral structure
+*	@param pin: the GPIO pin number to clear the interrupt for
+*	@retval: none
+*/
 void hal_clear_gpio_interrupt(GPIOA_Type* GPIOx, uint8_t pin);
+
+
 #endif //__HAL_GPIO_DRIVER_H

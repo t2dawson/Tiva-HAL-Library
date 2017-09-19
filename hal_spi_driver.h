@@ -1,6 +1,8 @@
 #ifndef __HAL_SPI_DRIVER_H
 #define __HAL_SPI_DRIVER_H
 
+//TODO: define macros for SPI IRQ numbers
+
 // Microcontroller specific header file for Register Map
 #include "tm4c123gh6pm.h"
 
@@ -69,10 +71,14 @@
 #define RESET 0
 #define SET !RESET
 
+#define SPI_REG_TXE_INTERRUPT_ENABLE  	((uint32_t) 1 << 3)
+#define SPI_REG_RXNE_INTERRUPT_ENABLE		((uint32_t) 1 << 2)
+
 #define SPI_0	SSI0
 #define SPI_1 SSI1
 #define SPI_2 SSI2
 #define SPI_3 SSI3
+
 
 #define __HAL_RCC_SPI0_CLK_ENABLE				(SYSCTL->RCGCSSI |= ( 1 << 0))
 #define __HAL_RCC_SPI1_CLK_ENABLE				(SYSCTL->RCGCSSI |= ( 1 << 1))
@@ -147,7 +153,7 @@ typedef struct {
 	
 	uint16_t		*pRxBuffPtr;	// Pointer to the RX Buffer
 	
-	uint16_t 		*RxSize;			// SPI recieve size
+	uint16_t 		 RxSize;			// SPI recieve size
 	
 	uint16_t 			RxCount;		// SPI recieve counter
 	
@@ -210,7 +216,57 @@ void hal_spi_slave_tx(spi_handle_t* spi_handle, uint16_t* buffer, uint32_t len);
 void hal_spi_slave_rx(spi_handle_t* spi_handle, uint16_t* rcvBuffer, uint32_t len);
 
 
+/**
+*	@brief: This function enables the TX empty (End of transmission) Interrupt
+*	@param  SPIx: pointer to the SSI Type structure containing 
+*
+*	@retval: none
+*/
+void hal_spi_enable_txe_interrupt(SSI0_Type* SPIx);
 
+
+/**
+*	@brief: This function disables the TX empty (End of transmission) Interrupt
+*	@param  SPIx: pointer to the SSI Type structure containing 
+*
+*	@retval: none
+*/
+void hal_spi_disable_txe_interrupt(SSI0_Type* SPIx);
+
+
+
+/**
+*	@brief: This function enables the RX Not Empty Interrupt
+*	@param  SPIx: pointer to the SSI Type structure containing 
+*
+*	@retval: none
+*/
+void hal_spi_enable_rxne_interrupt(SSI0_Type* SPIx);
+
+
+
+/**
+*	@brief: This function disables the RX Not Empty Interrupt
+*	@param  SPIx: pointer to the SSI Type structure containing 
+*
+*	@retval: none
+*/
+void hal_spi_enable_rxne_interrupt(SSI0_Type* SPIx);
+
+
+/**
+*	@brief: This function enables NVIC for the SPI peripheral
+*	@param irq: the IRQ number of the SPI peripheral
+*	@retval: none
+*/
+void hal_spi_enable_global_interrupt(IRQn_Type irq);
+
+/**
+*	@brief: This function disables NVIC for the SPI peripheral
+*	@param irq: the IRQ number of the SPI peripheral
+*	@retval: none
+*/
+void hal_spi_disable_global_interrupt(IRQn_Type irq);
 /**
 *	@brief: This function handles the SPI interrupt request.
 *	@param  hspi: pointer to the spi_handle_t structure containing 

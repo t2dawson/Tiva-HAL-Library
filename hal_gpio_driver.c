@@ -31,23 +31,18 @@ void hal_gpio_init(GPIOA_Type* GPIOx, GPIO_Config_t* gpio_pin_conf) {
 			GPIOx->AMSEL |= (gpio_pin_conf->analog_enable << gpio_pin_conf->pin);			
 }
 
-void hal_gpio_write(GPIOA_Type* GPIOx, uint8_t pin, uint8_t val) {
+void hal_gpio_write_port(GPIOA_Type* GPIOx, uint8_t val) {
 	
-	if(val)
-		GPIOx->DATA |= ( 1 << pin);
-	
-	else
-		GPIOx->DATA &= ~(1 << pin);
+	GPIOx->DATA = val;
 }
 
-uint8_t hal_gpio_read(GPIOA_Type* GPIOx, uint8_t pin) {
+uint8_t hal_gpio_read_port(GPIOA_Type* GPIOx) {
 	
 	uint8_t value;
 	
-	//Read from the GPIODATA register and shift the value by the pin number
-	// to get the appropriate reading
+	//Read from the GPIODATA register 
 	
-	value = ((GPIOx->DATA >> pin) & 0x01);
+	value = GPIOx->DATA ;
 	
 	return value;
 	
@@ -68,7 +63,7 @@ void hal_configure_gpio_interrupt(GPIOA_Type* GPIOx, uint8_t pin, edge_select_t 
 	
 	else {
 		
-		GPIOx->IS &= ~1 << pin);
+		GPIOx->IS &= ~(1 << pin);
 		
 		if ( edge == RISING_AND_FALLING_EDGE) 
 			GPIOx->IBE |= (1 << pin);
