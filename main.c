@@ -5,7 +5,7 @@ GPIO_Config_t led_config;
 
 int main (void) {
 	
-	int i ;
+	/*int i ;
 	__HAL_RCC_GPIOF_CLK_ENABLE();
 	led_config.pin = 1;
 	led_config.function = 0;
@@ -31,7 +31,7 @@ int main (void) {
 	hal_gpio_write(GPIO_PORT_F, 2, 0);
 	hal_gpio_write(GPIO_PORT_F, 3 , 1);
 	
-	}
+	} */
 	
 	return 0;
 }
